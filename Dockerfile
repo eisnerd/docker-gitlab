@@ -1,4 +1,4 @@
-FROM quay.io/eisnerd/ubuntu:16.04.20160914
+FROM quay.io/eisnerd/ubuntu:16.04.20160923.1
 MAINTAINER sameer@damagehead.com
 
 ENV GITLAB_VERSION=8.13.5 \
