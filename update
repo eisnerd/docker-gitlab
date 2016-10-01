@@ -1,0 +1,28 @@
+#!/bin/bash
+
+VERSION="$1"
+
+[ -z "$VERSION" ] &&
+	echo usage: ./update VERSION &&
+        echo Updates from the current version to VERSION. &&
+        echo e.g. &&
+        echo "    ./update 8.12.3" &&
+        exit 1
+
+git status --porcelain|grep -q ^\ *M &&
+	echo Please run ./update only on a clean working directory. &&
+	git status &&
+        exit 1
+(
+cd "$(git rev-parse --show-toplevel)"
+
+read < VERSION
+grep "$REPLY" --exclude=Changelog.md -rl *|xargs -n1 sed -i "s/$REPLY/$VERSION/g"
+sed "/^$REPLY/i\\
+$VERSION\\
+- gitlab: upgrade to CE v$VERSION\\
+" -i Changelog.md
+
+git commit -am "gitlab: upgrade to CE $VERSION"
+git tag "$VERSION"
+)
